@@ -1,0 +1,141 @@
+# generated: 2026-02-25
+# project: bmad
+# project_key: NOKEY
+# tracking_system: file-system
+# story_location: /Users/kousic/Desktop/learn/bmad/_bmad-output/implementation-artifacts
+
+# STATUS DEFINITIONS:
+# ==================
+# Epic Status:
+#   - backlog: Epic not yet started
+#   - in-progress: Epic actively being worked on
+#   - done: All stories in epic completed
+#
+# Epic Status Transitions:
+#   - backlog → in-progress: Automatically when first story is created (via create-story)
+#   - in-progress → done: Manually when all stories reach 'done' status
+#
+# Story Status:
+#   - backlog: Story only exists in epic file
+#   - ready-for-dev: Story file created in stories folder
+#   - in-progress: Developer actively working on implementation
+#   - review: Ready for code review (via Dev's code-review workflow)
+#   - done: Story completed
+#
+# Retrospective Status:
+#   - optional: Can be completed but not required
+#   - done: Retrospective has been completed
+#
+# WORKFLOW NOTES:
+# ===============
+# - Epic transitions to 'in-progress' automatically when first story is created
+# - Stories can be worked in parallel if team capacity allows
+# - SM typically creates next story after previous one is 'done' to incorporate learnings
+# - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
+
+generated: 2026-02-26
+project: bmad
+project_key: NOKEY
+tracking_system: file-system
+story_location: /Users/kousic/Desktop/learn/bmad/_bmad-output/implementation-artifacts
+
+development_status:
+  # ─────────────────────────────────────────────────────────────
+  # Epic 1: Project Foundation
+  # Goal: Environment, scaffold, shared utilities
+  # ─────────────────────────────────────────────────────────────
+  epic-1: done
+  1-1-project-initialization: done
+  1-2-game-loop-scaffold: done
+  1-3-shared-utilities: done
+  epic-1-retrospective: optional
+
+  # ─────────────────────────────────────────────────────────────
+  # Epic 2: Player Ship
+  # Goal: Ship rendering, physics, bullets
+  # ─────────────────────────────────────────────────────────────
+  epic-2: done
+  2-1-ship-rendering-and-physics: done
+  2-2-player-bullets: done
+  2-3-ship-and-bullet-screen-wrapping: done
+  epic-2-retrospective: optional
+
+  # ─────────────────────────────────────────────────────────────
+  # Epic 3: Asteroids
+  # Goal: Spawning, movement, splitting
+  # ─────────────────────────────────────────────────────────────
+  epic-3: done
+  3-1-asteroid-spawning-and-shape-generation: done
+  3-2-asteroid-movement-and-wrapping: done
+  3-3-asteroid-splitting: done
+  epic-3-retrospective: optional
+
+  # ─────────────────────────────────────────────────────────────
+  # Epic 4: Collision Detection
+  # Goal: All collision pairs
+  # ─────────────────────────────────────────────────────────────
+  epic-4: done
+  4-1-collision-detection-framework: done
+  4-2-bullet-object-collisions: done
+  4-3-ship-threat-collisions: done
+  epic-4-retrospective: optional
+
+  # ─────────────────────────────────────────────────────────────
+  # Epic 5: Game Loop Core
+  # Goal: Score, lives, respawn, wave progression
+  # ─────────────────────────────────────────────────────────────
+  epic-5: done
+  5-1-score-and-lives-system: done
+  5-2-respawn-system: done
+  5-3-wave-progression: done
+  epic-5-retrospective: optional
+
+  # ─────────────────────────────────────────────────────────────
+  # Epic 6: Game States and UI
+  # Goal: State machine, pause, HUD, menus
+  # ─────────────────────────────────────────────────────────────
+  epic-6: done
+  6-1-full-state-machine: done
+  6-2-pause-system: done
+  6-3-hud: done
+  6-4-title-and-game-over-screens: done
+  epic-6-retrospective: optional
+
+  # ─────────────────────────────────────────────────────────────
+  # Epic 7: Advanced Gameplay
+  # Goal: High score, saucers, hyperspace
+  # ─────────────────────────────────────────────────────────────
+  epic-7: done
+  7-1-high-score-persistence: done
+  7-2-large-saucer: done
+  7-3-small-saucer-and-difficulty-scaling: done
+  7-4-saucer-bullets-and-collisions: done
+  7-5-hyperspace: done
+  epic-7-retrospective: optional
+
+  # ─────────────────────────────────────────────────────────────
+  # Epic 8: Audio
+  # Goal: Sound manager, SFX, heartbeat
+  # ─────────────────────────────────────────────────────────────
+  epic-8: done
+  8-1-sound-manager-and-basic-sfx: done
+  8-2-saucer-alarm-and-heartbeat: done
+  epic-8-retrospective: optional
+
+  # ─────────────────────────────────────────────────────────────
+  # Epic 9: Visual Polish
+  # Goal: Particles, edge rendering, extra life indicators
+  # ─────────────────────────────────────────────────────────────
+  epic-9: done
+  9-1-explosion-particles: done
+  9-2-screen-edge-visual-continuity: done
+  9-3-extra-life-indicator: done
+  epic-9-retrospective: optional
+
+  # ─────────────────────────────────────────────────────────────
+  # Epic 10: Integration and Acceptance Testing
+  # Goal: Full integration testing against all 52 FRs
+  # ─────────────────────────────────────────────────────────────
+  epic-10: done
+  10-1-full-integration-test-pass: done
+  epic-10-retrospective: optional
