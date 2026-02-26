@@ -11,12 +11,15 @@ from settings import (
     SCORE_LARGE_SAUCER, SCORE_SMALL_SAUCER,
     SAUCER_SPAWN_INTERVAL_BASE, SAUCER_SPAWN_INTERVAL_MIN,
 )
+from game_config import SettingsManager
+from settings_overlay import SettingsOverlay
 
 
 class GameState(Enum):
     TITLE_SCREEN = auto()
     PLAYING      = auto()
     PAUSED       = auto()
+    SETTINGS     = auto()
     GAME_OVER    = auto()
 
 
@@ -93,6 +96,12 @@ _hud           = None
 _title_screen  = None
 _game_over_screen = None
 _sound_manager = None
+_settings_mgr  = SettingsManager()
+_settings_overlay = None
+_settings_return_state = GameState.TITLE_SCREEN
+_bindings = _settings_mgr.key_bindings()
+_paused_index = 0
+_PAUSED_OPTIONS = ["Resume", "Restart", "Settings", "Quit"]
 
 
 # ── State transition ──────────────────────────────────────────
@@ -103,6 +112,7 @@ def transition_to(new_state: GameState) -> None:
         GameState.TITLE_SCREEN: _on_enter_title,
         GameState.PLAYING:      _on_enter_playing,
         GameState.PAUSED:       _on_enter_paused,
+        GameState.SETTINGS:     _on_enter_settings,
         GameState.GAME_OVER:    _on_enter_game_over,
     }
     hook = _entry_hooks.get(new_state)
@@ -123,7 +133,7 @@ def _on_enter_playing() -> None:
     global ship, bullets, asteroids, saucers, particles
     global score, lives, wave, high_score
     global _respawn_timer, _wave_timer, _saucer_timer
-    global play_sub_state, _hud, _sound_manager
+    global play_sub_state, _hud, _sound_manager, _bindings
 
     # Load high score
     try:
@@ -146,6 +156,8 @@ def _on_enter_playing() -> None:
     except Exception:
         _sound_manager = None
 
+    _apply_runtime_settings()
+
     score = 0
     lives = MAX_LIVES
     wave  = 1
@@ -166,8 +178,22 @@ def _on_enter_playing() -> None:
     _spawn_wave(wave)
 
 
+def _apply_runtime_settings() -> None:
+    global _bindings
+    _bindings = _settings_mgr.key_bindings()
+    if _sound_manager:
+        a = _settings_mgr.settings["audio"]
+        _sound_manager.set_volumes(a.get("master", 0.8), a.get("music", 0.6), a.get("sfx", 0.9))
+
+
 def _on_enter_paused() -> None:
-    pass
+    global _paused_index
+    _paused_index = 0
+
+
+def _on_enter_settings() -> None:
+    global _settings_overlay
+    _settings_overlay = SettingsOverlay(_settings_mgr)
 
 
 def _on_enter_game_over() -> None:
@@ -245,13 +271,16 @@ def handle_events() -> None:
 
 
 def _handle_title_events(event) -> None:
-    global running
+    global running, _settings_return_state
     if event.key == pygame.K_ESCAPE:
         running = False
     elif event.key == pygame.K_RETURN or event.key == pygame.K_SPACE:
         global _next_extra_life_threshold
         _next_extra_life_threshold = EXTRA_LIFE_THRESHOLD
         transition_to(GameState.PLAYING)
+    elif event.key == pygame.K_s:
+        _settings_return_state = GameState.TITLE_SCREEN
+        transition_to(GameState.SETTINGS)
 
 
 def _handle_playing_events(event) -> None:
@@ -345,7 +374,7 @@ def _update_active(dt: float) -> None:
     # Ship
     if ship and ship.alive:
         keys = pygame.key.get_pressed()
-        ship.handle_keys(keys, dt)
+        ship.handle_keys(keys, dt, _bindings)
         ship.update(dt)
 
     # Bullets

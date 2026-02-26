@@ -35,6 +35,9 @@ class SoundManager:
         self._heartbeat_timer = 0.0
         self._heartbeat_interval = 1.0   # seconds between beats (decreases with action)
         self._heartbeat_phase = 0        # alternates 0/1 for hi/lo beat
+        self.master = 0.8
+        self.music = 0.6
+        self.sfx = 0.9
 
         if not pygame.mixer.get_init():
             return  # mixer not available
@@ -46,11 +49,19 @@ class SoundManager:
             except (pygame.error, FileNotFoundError, OSError):
                 pass  # missing sound — no crash
 
+    def set_volumes(self, master: float, music: float, sfx: float) -> None:
+        self.master = max(0.0, min(1.0, float(master)))
+        self.music = max(0.0, min(1.0, float(music)))
+        self.sfx = max(0.0, min(1.0, float(sfx)))
+
     def play(self, name: str) -> None:
         """Play a sound by name. No-op if sound is missing."""
         sound = self._sounds.get(name)
         if sound:
             try:
+                # heartbeat treated as music-like layer, others as sfx
+                layer = self.music if name.startswith("heartbeat") else self.sfx
+                sound.set_volume(self.master * layer)
                 sound.play()
             except pygame.error:
                 pass

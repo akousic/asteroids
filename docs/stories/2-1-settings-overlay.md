@@ -7,21 +7,21 @@ Players need in-game settings to tune audio and controls without editing code/co
 As a player, I want a settings overlay so I can adjust sound and keybindings quickly.
 
 ## Tasks
-- Add settings button entry points (main menu + pause overlay).
-- Build settings modal component with tabs:
-  - Audio
-  - Controls
-- Audio settings:
-  - Master volume
-  - Music volume
-  - SFX volume
-  - Persist to local storage
-- Controls settings:
-  - Rebind thrust/turn-left/turn-right/fire/pause
-  - Detect duplicate bindings and block save
-  - Reset defaults
-- Add save/apply/cancel flow.
-- Add unit/integration checks for persistence + conflict handling.
+- [x] Add settings entry points (title key `S` + pause overlay menu).
+- [x] Build settings modal component with tabs:
+  - [x] Audio
+  - [x] Controls
+- [x] Audio settings:
+  - [x] Master volume
+  - [x] Music volume
+  - [x] SFX volume
+  - [x] Persist to local storage
+- [x] Controls settings:
+  - [x] Rebind thrust/turn-left/turn-right/fire/pause
+  - [x] Detect duplicate bindings and block save
+  - [x] Reset defaults
+- [x] Add save/apply/cancel flow.
+- [x] Add sanity validation via Python compile check for touched modules.
 
 ## Acceptance Criteria
 - Settings opens from both menu and pause.

@@ -46,14 +46,21 @@ class PlayerShip:
         self._flame_toggle = 0    # flicker counter for thrust flame
 
     # ── Input ─────────────────────────────────────────────────
-    def handle_keys(self, keys, dt: float) -> None:
+    def handle_keys(self, keys, dt: float, bindings=None) -> None:
         """Read held keys and apply thrust / rotation."""
-        if keys[pygame.K_LEFT] or keys[pygame.K_a]:
+        if bindings is None:
+            bindings = {
+                "turn_left": pygame.K_a,
+                "turn_right": pygame.K_d,
+                "thrust": pygame.K_w,
+            }
+
+        if keys[bindings["turn_left"]]:
             self.angle -= ROTATION_SPEED * dt
-        if keys[pygame.K_RIGHT] or keys[pygame.K_d]:
+        if keys[bindings["turn_right"]]:
             self.angle += ROTATION_SPEED * dt
 
-        self._thrust_on = keys[pygame.K_UP] or keys[pygame.K_w]
+        self._thrust_on = keys[bindings["thrust"]]
         if self._thrust_on:
             # Direction: angle=0 means nose points up (−Y), so thrust vector is:
             rad = math.radians(self.angle)
