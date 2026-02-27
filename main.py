@@ -10,6 +10,7 @@ from settings import (
     SCORE_LARGE_ASTEROID, SCORE_MEDIUM_ASTEROID, SCORE_SMALL_ASTEROID,
     SCORE_LARGE_SAUCER, SCORE_SMALL_SAUCER,
     SAUCER_SPAWN_INTERVAL_BASE, SAUCER_SPAWN_INTERVAL_MIN,
+    ROTATION_SPEED,
 )
 from game_config import SettingsManager
 from settings_overlay import SettingsOverlay
@@ -215,7 +216,7 @@ def _get_gamepad():
 
 def _apply_gamepad_input(dt: float) -> None:
     global bullets
-    if game_state != GameState.PLAYING or play_sub_state != PlaySubState.ACTIVE:
+    if state != GameState.PLAYING or play_sub_state != PlaySubState.ACTIVE:
         return
     if not ship.alive:
         return
@@ -454,6 +455,9 @@ def _update_playing(dt: float) -> None:
 
 def _update_active(dt: float) -> None:
     global bullets, asteroids, saucers, particles, _saucer_timer
+
+    # Controller input
+    _apply_gamepad_input(dt)
 
     # Ship
     if ship and ship.alive:
