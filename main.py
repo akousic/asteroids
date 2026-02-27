@@ -103,6 +103,8 @@ _bindings = _settings_mgr.key_bindings()
 _paused_index = 0
 _PAUSED_OPTIONS = ["Resume", "Restart", "Settings", "Fullscreen", "Quit"]
 
+_controller_status_timer = 0.0
+
 
 # ── State transition ──────────────────────────────────────────
 def transition_to(new_state: GameState) -> None:
@@ -190,6 +192,79 @@ def _toggle_fullscreen() -> None:
     global _is_fullscreen
     _is_fullscreen = not _is_fullscreen
     _apply_display_mode()
+
+
+def _update_controller_status(msg: str, seconds: float = 2.5) -> None:
+    global _controller_status_msg, _controller_status_timer
+    _controller_status_msg = msg
+    _controller_status_timer = max(_controller_status_timer, seconds)
+
+
+def _get_gamepad():
+    if pygame.joystick.get_count() <= 0:
+        return None
+    try:
+        js = pygame.joystick.Joystick(0)
+        if not js.get_init():
+            js.init()
+        return js
+    except Exception:
+        return None
+
+
+def _apply_gamepad_input(dt: float) -> None:
+    global bullets
+    if game_state != GameState.PLAYING or play_sub_state != PlaySubState.ACTIVE:
+        return
+    if not ship.alive:
+        return
+
+    js = _get_gamepad()
+    if js is None:
+        return
+
+    # Left stick X for turning, deadzone
+    axis_x = js.get_axis(0)
+    deadzone = 0.2
+    if abs(axis_x) >= deadzone:
+        ship.angle += axis_x * ROTATION_SPEED * dt
+
+    # A (0) = thrust
+    thrust = js.get_button(0)
+    ship._thrust_on = bool(thrust)
+
+    # Start/Menu button pauses
+    pause_pressed = False
+    try:
+        pause_pressed = bool(js.get_button(7))
+    except Exception:
+        pause_pressed = False
+
+    if pause_pressed:
+        if not hasattr(_apply_gamepad_input, "_last_pause"):
+            _apply_gamepad_input._last_pause = 0.0
+        now = pygame.time.get_ticks() / 1000.0
+        if now - _apply_gamepad_input._last_pause > 0.25:
+            transition_to(GameState.PAUSED)
+            _apply_gamepad_input._last_pause = now
+            return
+
+    # RT axis (5) or B (1) as fire
+    fire_pressed = False
+    try:
+        rt = js.get_axis(5)  # ranges -1..1
+        fire_pressed = rt > 0.5
+    except Exception:
+        pass
+    fire_pressed = fire_pressed or bool(js.get_button(1))
+
+    if fire_pressed and len(bullets) < MAX_BULLETS:
+        if not hasattr(_apply_gamepad_input, "_last_fire"):
+            _apply_gamepad_input._last_fire = 0.0
+        now = pygame.time.get_ticks() / 1000.0
+        if now - _apply_gamepad_input._last_fire > 0.16:
+            bullets.append(Bullet(ship.x, ship.y, ship.angle))
+            _apply_gamepad_input._last_fire = now
 
 
 def _on_enter_paused() -> None:
@@ -694,7 +769,13 @@ def main() -> None:
         handle_events()
         update(dt)
         draw(screen)
-        pygame.display.flip()
+        # Controller status hint
+    if _controller_status_timer > 0:
+        font = pygame.font.SysFont(None, 28)
+        txt = font.render(_controller_status_msg, True, (180, 220, 255))
+        screen.blit(txt, (SCREEN_WIDTH - txt.get_width() - 16, 12))
+
+    pygame.display.flip()
 
     pygame.quit()
     sys.exit()
