@@ -104,6 +104,7 @@ _paused_index = 0
 _PAUSED_OPTIONS = ["Resume", "Restart", "Settings", "Fullscreen", "Quit"]
 
 _controller_status_timer = 0.0
+_controller_status_msg = ""
 
 
 # ── State transition ──────────────────────────────────────────
@@ -770,12 +771,12 @@ def main() -> None:
         update(dt)
         draw(screen)
         # Controller status hint
-    if _controller_status_timer > 0:
-        font = pygame.font.SysFont(None, 28)
-        txt = font.render(_controller_status_msg, True, (180, 220, 255))
-        screen.blit(txt, (SCREEN_WIDTH - txt.get_width() - 16, 12))
+        if _controller_status_timer > 0:
+            font = pygame.font.SysFont(None, 28)
+            txt = font.render(_controller_status_msg, True, (180, 220, 255))
+            screen.blit(txt, (SCREEN_WIDTH - txt.get_width() - 16, 12))
 
-    pygame.display.flip()
+        pygame.display.flip()
 
     pygame.quit()
     sys.exit()

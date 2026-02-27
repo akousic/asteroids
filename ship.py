@@ -50,9 +50,9 @@ class PlayerShip:
         """Read held keys and apply thrust / rotation."""
         if bindings is None:
             bindings = {
-                "turn_left": pygame.K_a,
-                "turn_right": pygame.K_d,
-                "thrust": pygame.K_w,
+                "turn_left": pygame.K_LEFT,
+                "turn_right": pygame.K_RIGHT,
+                "thrust": pygame.K_UP,
             }
 
         if keys[bindings["turn_left"]]:

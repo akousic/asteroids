@@ -11,9 +11,9 @@ DEFAULT_SETTINGS = {
         "sfx": 0.9,
     },
     "controls": {
-        "thrust": "w",
-        "turn_left": "a",
-        "turn_right": "d",
+        "thrust": "up",
+        "turn_left": "left",
+        "turn_right": "right",
         "fire": "space",
         "pause": "p",
     },
