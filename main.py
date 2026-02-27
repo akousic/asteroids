@@ -454,7 +454,7 @@ def _update_playing(dt: float) -> None:
 
 
 def _update_active(dt: float) -> None:
-    global bullets, asteroids, saucers, particles, _saucer_timer
+    global bullets, asteroids, saucers, particles, _saucer_timer, play_sub_state, _wave_timer
 
     # Controller input
     _apply_gamepad_input(dt)
@@ -507,7 +507,6 @@ def _update_active(dt: float) -> None:
 
     # Wave clear check
     if not asteroids and not saucers and play_sub_state == PlaySubState.ACTIVE:
-        global _wave_timer
         _wave_timer = WAVE_TRANSITION_DELAY
         play_sub_state = PlaySubState.WAVE_TRANSITION
 
