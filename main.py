@@ -101,7 +101,7 @@ _settings_overlay = None
 _settings_return_state = GameState.TITLE_SCREEN
 _bindings = _settings_mgr.key_bindings()
 _paused_index = 0
-_PAUSED_OPTIONS = ["Resume", "Restart", "Settings", "Quit"]
+_PAUSED_OPTIONS = ["Resume", "Restart", "Settings", "Fullscreen", "Quit"]
 
 
 # ── State transition ──────────────────────────────────────────
@@ -184,6 +184,12 @@ def _apply_runtime_settings() -> None:
     if _sound_manager:
         a = _settings_mgr.settings["audio"]
         _sound_manager.set_volumes(a.get("master", 0.8), a.get("music", 0.6), a.get("sfx", 0.9))
+
+
+def _toggle_fullscreen() -> None:
+    global _is_fullscreen
+    _is_fullscreen = not _is_fullscreen
+    _apply_display_mode()
 
 
 def _on_enter_paused() -> None:
@@ -281,6 +287,8 @@ def _handle_title_events(event) -> None:
     elif event.key == pygame.K_s:
         _settings_return_state = GameState.TITLE_SCREEN
         transition_to(GameState.SETTINGS)
+    elif event.key == pygame.K_f:
+        _toggle_fullscreen()
 
 
 def _handle_playing_events(event) -> None:
